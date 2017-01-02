@@ -3,6 +3,18 @@ import { Link } from 'react-router';
 import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
+
+const CheckboxStyles = {
+  block: {
+    maxWidth: 250,
+  },
+  checkbox: {
+    width: 100,
+    marginBottom: 16,
+    display: 'inline-block'
+  },
+};
 
 
 const SignUpForm = ({
@@ -45,6 +57,18 @@ const SignUpForm = ({
           onChange={onChange}
           errorText={errors.password}
           value={user.password}
+        />
+      </div>
+
+      <div className="field-line">
+      {errors.admin && <p className="error-message">{errors.admin}</p>}
+        <Checkbox
+          label="Admin"
+          labelPosition="left"
+          style={CheckboxStyles.checkbox}
+          name="admin"
+          onChange={onChange}
+          value={user.admin}
         />
       </div>
 
