@@ -5,6 +5,41 @@ import SignUpForm from '../components/SignUpForm.jsx';
 class SignUpPage extends React.Component {
 
   /**
+   * Class constructor.
+   */
+  constructor(props) {
+    super(props);
+
+    // set the initial component state
+    this.state = {
+      errors: {},
+      user: {
+        email: '',
+        name: '',
+        password: ''
+      }
+    };
+
+    this.processForm = this.processForm.bind(this);
+    this.changeUser = this.changeUser.bind(this);
+  }
+
+  /**
+   * Change the user object.
+   *
+   * @param {object} event - the JavaScript event object
+   */
+  changeUser(event) {
+    const field = event.target.name;
+    const user = this.state.user;
+    user[field] = event.target.value;
+
+    this.setState({
+      user
+    });
+  }
+
+  /**
    * Process the form.
    *
    * @param {object} event - the JavaScript event object
@@ -27,8 +62,23 @@ class SignUpPage extends React.Component {
     xhr.addEventListener('load', () => {
       if (xhr.status === 200) {
         // success
-        console.log({name, email, password});
-    }
+
+        // change the component-container state
+        this.setState({
+          errors: {}
+        });
+
+        console.log('The form is valid');
+      } else {
+        // failure
+
+        const errors = xhr.response.errors ? xhr.response.errors : {};
+        errors.summary = xhr.response.message;
+
+        this.setState({
+          errors
+        });
+      }
     });
     xhr.send(formData);
   }
@@ -41,6 +91,7 @@ class SignUpPage extends React.Component {
       <SignUpForm
         onSubmit={this.processForm}
         onChange={this.changeUser}
+        errors={this.state.errors}
         user={this.state.user}
       />
     );
