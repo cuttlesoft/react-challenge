@@ -7,8 +7,8 @@ class SignUpPage extends React.Component {
   /**
    * Class constructor.
    */
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     // set the initial component state
     this.state = {
@@ -22,21 +22,6 @@ class SignUpPage extends React.Component {
 
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
-  }
-
-  /**
-   * Change the user object.
-   *
-   * @param {object} event - the JavaScript event object
-   */
-  changeUser(event) {
-    const field = event.target.name;
-    const user = this.state.user;
-    user[field] = event.target.value;
-
-    this.setState({
-      user
-    });
   }
 
   /**
@@ -68,7 +53,11 @@ class SignUpPage extends React.Component {
           errors: {}
         });
 
-        console.log('The form is valid');
+        // set a message
+        localStorage.setItem('successMessage', xhr.response.message);
+
+        // make a redirect
+        this.context.router.replace('/login');
       } else {
         // failure
 
@@ -81,6 +70,21 @@ class SignUpPage extends React.Component {
       }
     });
     xhr.send(formData);
+  }
+
+  /**
+   * Change the user object.
+   *
+   * @param {object} event - the JavaScript event object
+   */
+  changeUser(event) {
+    const field = event.target.name;
+    const user = this.state.user;
+    user[field] = event.target.value;
+
+    this.setState({
+      user
+    });
   }
 
   /**
@@ -98,5 +102,9 @@ class SignUpPage extends React.Component {
   }
 
 }
+
+SignUpPage.contextTypes = {
+  router: PropTypes.object.isRequired
+};
 
 export default SignUpPage;
